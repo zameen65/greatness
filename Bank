@@ -1,0 +1,70 @@
+using System;
+using Extra;
+using Extra.BozoNationalBank;
+using Extra.StoogeAmalgamatedBank;
+
+namespace Extra
+{
+   class MainEntryPoint
+   {
+      static void Main()
+      {
+         IBankAccount BozoAccount = new SaverAccount();
+          Console.WriteLine("Number of SaverAccounts = "
+              + Convert.ToString(SaverAccount.numberOfSavers));
+
+          IBankAccount BozoAccount2 = new SaverAccount();
+          Console.WriteLine("Number of SaverAccounts = "
+              + Convert.ToString(SaverAccount.numberOfSavers));
+
+         IBankAccount StoogeAccount = new GoldAccount();
+         Console.WriteLine("Number of GoldAccounts = "
+                       + Convert.ToString(GoldAccount.numberOfGolds));
+
+         IBankAccount StoogeAccount2 = new GoldAccount();
+         Console.WriteLine("Number of GoldAccounts = "
+                       + Convert.ToString(GoldAccount.numberOfGolds));
+            Console.WriteLine(" Stooge2  "
+                         + Convert.ToString(GoldAccount.numberOfGolds));
+            StoogeAccount2 = null;
+            Console.WriteLine("set Stooge2 to null "
+                          + Convert.ToString(GoldAccount.numberOfGolds));
+            System.GC.Collect();
+            Console.WriteLine("after GC.Collect() "
+                          + Convert.ToString(GoldAccount.numberOfGolds));
+
+            try
+         {
+             //good withdrawals
+             BozoAccount.Deposit(200);
+             BozoAccount.Withdraw(100);             
+             StoogeAccount.Deposit(500);
+             StoogeAccount.Withdraw(400);             
+             //bad withdrawals             
+             BozoAccount.Withdraw(200);             ;
+             StoogeAccount.Withdraw(200);
+             
+         }
+         catch (InsufficientFundsException excp)
+         {
+             
+             Console.WriteLine(excp.Message);
+         }
+
+         finally
+         {
+             Console.WriteLine(StoogeAccount.ToString());
+             Console.WriteLine(BozoAccount.ToString());
+             BozoAccount2 = null;
+             StoogeAccount2 = null;
+             System.GC.Collect();
+             Console.WriteLine("Number of SaverAccounts = "
+              + Convert.ToString(SaverAccount.numberOfSavers));
+            
+             Console.WriteLine("Number of GoldAccounts = "
+                       + Convert.ToString(GoldAccount.numberOfGolds));
+             
+         }
+      }
+   }
+}
